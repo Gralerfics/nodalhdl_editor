@@ -8,7 +8,7 @@ TODO。
 
 ### nodalhdl
 
-暂时建议将 [nodalhdl](https://github.com/Gralerfics/nodalhdl) 克隆到本地后以可编辑模式安装。在 nodalhdl 目录下执行：
+暂时建议将 [nodalhdl](https://github.com/Gralerfics/nodalhdl) 克隆到本地后以可编辑模式安装。在 nodalhdl 目录下执行（建议在虚拟环境下）：
 
 ```bash
 pip install -e . --config-settings editable_mode=compat
