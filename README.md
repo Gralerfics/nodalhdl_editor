@@ -1,1 +1,1 @@
-# nodalHDL_editor
+# nodalhdl_editor
