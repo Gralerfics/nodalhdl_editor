@@ -14,7 +14,7 @@ TODO。
 pip install -e . --config-settings editable_mode=compat
 ```
 
-参数 `--config-settings editable_mode=compat` 用于解决 Pylance（VSCode 中 Python 的语言服务器）无法为 `` 安装的包提供提示的问题，详见 [StackOverflow - Why are PyCharm and Pylance not detecting packages installed in editable mode?](https://stackoverflow.com/questions/76301782/why-are-pycharm-and-pylance-not-detecting-packages-installed-in-editable-mode)。
+参数 `--config-settings editable_mode=compat` 用于解决 Pylance（VSCode 中 Python 的语言服务器）无法为 `pip install -e .` 安装的包提供提示的问题，详见 [StackOverflow - Why are PyCharm and Pylance not detecting packages installed in editable mode?](https://stackoverflow.com/questions/76301782/why-are-pycharm-and-pylance-not-detecting-packages-installed-in-editable-mode)。
 
 若未生效可能需要 `Ctrl + Shift + P`（VSCode）后选择 `Python Restart Language Server` 重启。
 
