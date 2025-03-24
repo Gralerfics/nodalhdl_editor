@@ -7,7 +7,9 @@ from imgui_bundle import ImVec4, ImVec2
 from imgui_bundle import imgui_node_editor as ed # type: ignore
 from imgui_bundle.demos_python import demo_utils
 
-from structure_editor import StructureEditor, StructureState
+from structure_editor import StructureEditor
+
+from nodalhdl.core.structure import Structure
 
 
 class AppState:
@@ -34,9 +36,8 @@ def gui_menu(runner_params: hello_imgui.RunnerParams):
 def gui_app_menu(app_state: AppState):
     clicked_new_structure, _ = imgui.menu_item("New Structure", "", False)
     if clicked_new_structure:
-        new_editor = StructureEditor()
-        new_editor.state = StructureState()
-        add_window(f"Editor_{new_editor.state.structure.id[:8]}", lambda: new_editor.gui(), init_dockspace = "MainDockSpace")
+        new_editor = StructureEditor(Structure())
+        add_window(f"Editor_{new_editor.structure.id[:8]}", lambda: new_editor.gui(), init_dockspace = "MainDockSpace")
 
 
 """ Inspector """
@@ -78,13 +79,13 @@ if __name__ == "__main__":
     split_main_bottom.initial_dock = "MainDockSpace"
     split_main_bottom.new_dock = "BottomSpace"
     split_main_bottom.direction = imgui.Dir.down
-    split_main_bottom.ratio = 0.3
+    split_main_bottom.ratio = 0.233
     
     split_main_left = hello_imgui.DockingSplit()
     split_main_left.initial_dock = "MainDockSpace"
     split_main_left.new_dock = "LeftSpace"
     split_main_left.direction = imgui.Dir.left
-    split_main_left.ratio = 0.25
+    split_main_left.ratio = 0.233
     
     # 默认布局
     docking_params = hello_imgui.DockingParams()
