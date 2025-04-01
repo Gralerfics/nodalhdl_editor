@@ -41,7 +41,8 @@ def gui_app_menu(app_state: AppState):
         # new_editor = StructureEditor(Structure())
         new_editor = StructureEditor(test.m2)
         add_window(f"Editor_{hash(new_editor)}", lambda: new_editor.gui(), init_dockspace = "MainDockSpace")
-        # add_window(f"Editor_{new_editor.structure.id[:8]}", lambda: new_editor.gui(), init_dockspace = "MainDockSpace")
+        
+        # TODO check state in new_editor (e.g. events)
 
 
 """ Inspector """

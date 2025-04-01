@@ -1,3 +1,4 @@
+import sys
 from typing import Union, List, Tuple
 
 from imgui_bundle import imgui, imgui_ctx, imgui_node_editor as ed # type: ignore
@@ -83,6 +84,73 @@ def pin(editor_ctx: _BeginEndEditor, kind: ed.PinKind) -> _BeginEndPin:
 
 
 """
+    ed.link()
+"""
+def link(editor_ctx: _BeginEndEditor, input_pin_id: ed.PinId, output_pin_id: ed.PinId) -> None:
+    l_id = ed.LinkId(editor_ctx._next_id())
+    ed.link(l_id, input_pin_id, output_pin_id)
+
+
+"""
+    skip with block
+"""
+class _Abortable:
+    class AbortException(Exception): pass
+    
+    def _trace(self, frame, event, arg):
+        sys.settrace(None)
+        raise _Abortable.AbortException()
+    
+    def set_abort_hook(self):
+        # https://stackoverflow.com/questions/12594148/skipping-execution-of-with-block/12594789#12594789
+        # https://github.com/rfk/withhacks
+        sys.settrace(lambda *args, **keys: None)
+        f = sys._getframe(0)
+        while f.f_locals.get("self") is self:
+            f = f.f_back
+        f.f_trace = self._trace
+
+
+"""
+    ed.begin_create() / ed.end_create()
+"""
+class _BeginEndCreate(_Abortable):
+    def __enter__(self):
+        if not ed.begin_create():
+            self.set_abort_hook()
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is _Abortable.AbortException:
+            return True
+        
+        ed.end_create()
+
+def on_create() -> _BeginEndCreate:
+    return _BeginEndCreate()
+
+
+"""
+    ed.query_new_link()
+"""
+class _QueryNewLink(_Abortable):
+    def __enter__(self):
+        input_pin_id, output_pin_id = ed.PinId(), ed.PinId()
+        if not ed.query_new_link(input_pin_id, output_pin_id):
+            self.set_abort_hook()
+        if not input_pin_id or not output_pin_id:
+            self.set_abort_hook()
+        return input_pin_id, output_pin_id
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is _Abortable.AbortException:
+            return True
+
+def new_link() -> Tuple[ed.PinId, ed.PinId]:
+    return _QueryNewLink()
+
+
+"""
     ed.push_style_var() / ed.pop_style_var()
 """
 class _PushPopStyleVar:
@@ -108,25 +176,3 @@ def style_var(*args):
     else: # len(args) == 2:
         return _PushPopStyleVar((args[0], args[1]))
 
-
-"""
-(跳过 with 内容的黑魔法)
-import sys
-
-class ...:
-    def _trace(self, frame, event, arg):
-        sys.settrace(None)
-        raise Exception()
-    
-    def __enter__(self):
-        def set_abort_hook():
-            # https://stackoverflow.com/questions/12594148/skipping-execution-of-with-block/12594789#12594789
-            # https://github.com/rfk/withhacks
-            sys.settrace(lambda *args, **keys: None)
-            f = sys._getframe(0)
-            while f.f_locals.get("self") is self:
-                f = f.f_back
-            f.f_trace = self._trace
-        
-        ...
-"""
