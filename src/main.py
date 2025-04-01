@@ -11,6 +11,8 @@ from structure_editor import StructureEditor
 
 from nodalhdl.core.structure import Structure
 
+import test
+
 
 class AppState:
     def __init__(self):
@@ -36,8 +38,10 @@ def gui_menu(runner_params: hello_imgui.RunnerParams):
 def gui_app_menu(app_state: AppState):
     clicked_new_structure, _ = imgui.menu_item("New Structure", "", False)
     if clicked_new_structure:
-        new_editor = StructureEditor(Structure())
-        add_window(f"Editor_{new_editor.structure.id[:8]}", lambda: new_editor.gui(), init_dockspace = "MainDockSpace")
+        # new_editor = StructureEditor(Structure())
+        new_editor = StructureEditor(test.m2)
+        add_window(f"Editor_{hash(new_editor)}", lambda: new_editor.gui(), init_dockspace = "MainDockSpace")
+        # add_window(f"Editor_{new_editor.structure.id[:8]}", lambda: new_editor.gui(), init_dockspace = "MainDockSpace")
 
 
 """ Inspector """
