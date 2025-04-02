@@ -134,7 +134,7 @@ class StructureEditor:
                                                 (ed.StyleVar.pivot_alignment, imgui.ImVec2(0, 0.5)),
                                                 (ed.StyleVar.pivot_size, imgui.ImVec2(0, 0))
                                             ]):
-                                                for port_full_name, port in subs.ports_outside[(self.structure.id, subs_inst_name)].nodes():
+                                                for port_full_name, port in self.structure.get_subs_ports_outside(subs_inst_name).nodes():
                                                     if not port.origin_signal_type.belongs(Input):
                                                         continue
                                                     
@@ -160,7 +160,7 @@ class StructureEditor:
                                                 (ed.StyleVar.pivot_alignment, imgui.ImVec2(1, 0.5)),
                                                 (ed.StyleVar.pivot_size, imgui.ImVec2(0, 0))
                                             ]):
-                                                for port_full_name, port in subs.ports_outside[(self.structure.id, subs_inst_name)].nodes():
+                                                for port_full_name, port in self.structure.get_subs_ports_outside(subs_inst_name).nodes():
                                                     if not port.origin_signal_type.belongs(Output):
                                                         continue
                                                     
