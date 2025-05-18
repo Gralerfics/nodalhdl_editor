@@ -2,7 +2,11 @@
 
 ## Introduction
 
-TODO。
+**Ongoing**.
+
+只写好了 GUI 框架和预览结构的功能，暂无编辑功能。
+
+![gui_example](./doc/readme_assets/gui_example.png)
 
 ## Dependencies
 

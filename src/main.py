@@ -1,11 +1,8 @@
-from typing import Dict, Callable
+from typing import Callable
 
-from imgui_bundle import hello_imgui, imgui, immapp # type: ignore
-from imgui_bundle import icons_fontawesome_6
-from imgui_bundle import ImVec4, ImVec2
+from imgui_bundle import hello_imgui, imgui # type: ignore
 
-from imgui_bundle import imgui_node_editor as ed # type: ignore
-from imgui_bundle.demos_python import demo_utils
+from imgui_bundle import portable_file_dialogs as pfd # type: ignore
 
 from structure_editor import StructureEditor
 
@@ -34,13 +31,19 @@ def gui_menu(runner_params: hello_imgui.RunnerParams):
     hello_imgui.show_view_menu(runner_params)
 
 def gui_app_menu(app_state: AppState):
-    clicked_new_structure, _ = imgui.menu_item("New Structure", "", False)
-    if clicked_new_structure:
-        # new_editor = StructureEditor(Structure())
-        new_editor = StructureEditor(Structure.load_dill("m2.dill"))
-        add_window(f"Editor_{hash(new_editor)}", lambda: new_editor.gui(), init_dockspace = "MainDockSpace")
-        
-        # TODO check state in new_editor (e.g. events)
+    clicked_load_structure_from_file, _ = imgui.menu_item("Load Structure From File", "", False)
+    if clicked_load_structure_from_file:
+        open_file_dialog = pfd.open_file("Select a structure file")
+        res = open_file_dialog.result()
+        if open_file_dialog is not None and res is not None and len(res) > 0:
+            file_path = res[0]
+            
+            # 检查文件
+            
+            new_editor = StructureEditor(Structure.load_dill(file_path))
+            add_window(f"Editor_{hash(new_editor)}", lambda: new_editor.gui(), init_dockspace = "MainDockSpace")
+            
+            # TODO check state in new_editor (e.g. events) 例如用 structure_editor 中的状态的引用传进去拿出来放到 appstate
 
 
 """ Inspector """
@@ -113,8 +116,8 @@ if __name__ == "__main__":
     # 启动
     hello_imgui.run(runner_params)
     
-    # TODO 为了方便调试，暂时每次启动都清空配置文件
-    import os
-    if os.path.exists(runner_params.ini_filename):
-        os.remove(runner_params.ini_filename)
+    # # TODO 为了方便调试，暂时每次启动都清空配置文件
+    # import os
+    # if os.path.exists(runner_params.ini_filename):
+    #     os.remove(runner_params.ini_filename)
 
